@@ -10,8 +10,6 @@ import Utilidades.Metodos;
 public class AppNoObligatorio {
 	
 		public static void main(String args []){
-			// TODO Auto-generated method stub
-			
 			//EJERCICIO PILAS
 			
 			//ejercicio12a(); //CORREGIDO

@@ -1,40 +1,46 @@
-package Implementaciones.Estatico;
+package Implementaciones.Dinamico;
 
 import Api.PilaTDA;
 
 public class Pila implements PilaTDA {
+	
+	class nodo{
+		int valor;
+		nodo sig;
+	}
 
-	private int [] v;
-	private int ult;
+	nodo inicio;
 	
 	@Override
 	public void InicializarPila() {
-		ult = 0;
-		v = new int [100];
+		inicio = null;
+
 	}
 
 	@Override
 	public void Apilar(int x) {
-		v[ult] = x;
-		ult++;
+		nodo nuevo;
+		nuevo = new nodo();
+		nuevo.valor = x;
+		nuevo.sig = inicio;
+		inicio = nuevo;
+
 	}
 
 	@Override
 	public void Desapilar() {
-		ult--;
+		inicio = inicio.sig;
+
 	}
 
 	@Override
 	public int Tope() {
-		return v[ult-1];
+		return inicio.valor;
 	}
 
 	@Override
 	public boolean PilaVacia() {
-		if (ult == 0)
-			return true;
-		else
-			return false;
+		return inicio == null;
 	}
 
 }

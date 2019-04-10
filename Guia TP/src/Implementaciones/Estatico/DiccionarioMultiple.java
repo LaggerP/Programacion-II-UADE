@@ -87,6 +87,9 @@ public class DiccionarioMultiple implements DiccionarioMultipleTDA {
                 if (j<v[posC].ultV){
                     v[posC].valores[j] = v[posC].valores[v[posC].ultV];
                     v[posC].ultV--;
+                    //si no quedan mas valores en la clave
+                    //elimino la clave
+                    
                     if (v[posC].ultV==0){
                         eliminar(c);
                     }
