@@ -2,12 +2,11 @@ package Utilidades;
 
 import Api.ColaTDA;
 import Api.PilaTDA;
-import Implementaciones.Cola;
-import Implementaciones.Pila;
+import Implementaciones.Estatico.Cola;
+import Implementaciones.Estatico.Pila;
 
 public class Metodos {
 	
-	int cantCola = 0;
 
 	// <------INICIO METODOS DE PILA----->//
 
@@ -32,25 +31,23 @@ public class Metodos {
 	}
 
 	// 2c)
-	public void invertirPila(PilaTDA A) {
+	public void invertirPila(PilaTDA A, PilaTDA B) {
 		PilaTDA aux = new Pila();
-		PilaTDA aux2 = new Pila();
 		aux.InicializarPila();
-		aux2.InicializarPila();
 		pasarPila(A, aux);
-		pasarPila(aux, aux2);
-		pasarPila(aux2, A);
+		pasarPila(aux, B);
+		pasarPila(aux, A);
 	}
 
 	// 2d)
 	public int contarElementosPila(PilaTDA A) {
 		PilaTDA aux = new Pila();
+		aux.InicializarPila();
 		int cant = 0;
-
 		while (!A.PilaVacia()) {
-			cant++;
 			aux.Apilar(A.Tope());
 			A.Desapilar();
+			cant++;
 		}
 
 		while (!aux.PilaVacia()) {
@@ -65,7 +62,7 @@ public class Metodos {
 	public int sumarElementosPila(PilaTDA A) {
 		PilaTDA aux = new Pila();
 		aux.InicializarPila();
-		int valor = 0, sumador = 0;
+		int valor = 0, sumador=0;
 
 		while (!A.PilaVacia()) {
 			aux.Apilar(A.Tope());
@@ -84,14 +81,33 @@ public class Metodos {
 	// 2f)
 	public int calcularPromedioPila(PilaTDA A) {
 		int cant = contarElementosPila(A);
-		int total = sumarElementosPila(A);
-		return total / cant;
+		int sumaFinal = sumarElementosPila(A);
+		return sumaFinal/cant;
 	}
 
 	// <------FIN METODOS DE PILA----->//
 
 	// <------INICIO METODOS DE COLA----->//
+	
+	
+	// <---METODOS extras PARA INVERTIR PILA---> //
+	public void pasarPilaCola(PilaTDA O, ColaTDA D) {
+		while (!O.PilaVacia()){
+			D.Acolar(O.Tope());
+			O.Desapilar();
+		}
+	}
+	
+	public void pasarColaPila(ColaTDA O, PilaTDA D) {
+		while (!O.ColaVacia()){
+			D.Apilar(O.Primero());
+			O.Desacolar();
+		}
+	}
 
+	// <---FIN METODOS extras PARA INVERTIR PILA---> //
+	
+	
 	// 4a
 	public void pasarCola(ColaTDA A, ColaTDA B) {
 		while (!A.ColaVacia()) {
@@ -101,19 +117,13 @@ public class Metodos {
 	}
 
 	// 4b
-	public void invertirColaAux(ColaTDA A, ColaTDA C) {
-		ColaTDA aux = new Cola();
-		aux.InicializarCola();
-		pasarCola(A, aux);
-		
-		while (!aux.ColaVacia()) {
-			C.Acolar(aux.Primero());
-			A.Acolar(aux.Primero());
-			aux.Desacolar();
-			cantCola++;
-		}
+	public void invertirColaAux(ColaTDA A) {
+		PilaTDA aux = new Pila();
+		aux.InicializarPila();
+		pasarColaPila(A, aux);
+		pasarPilaCola(aux,A);
 	}
-
+	
 	// 4c)
 	public void invertirCola(ColaTDA A, ColaTDA C) {
 		ColaTDA aux = new Cola();
@@ -126,31 +136,43 @@ public class Metodos {
 		}
 	}
 
-	// 4d)
-	/*
-	public void colaCoincidencia(ColaTDA A, ColaTDA aux) {
-		int primerElemento = A.Primero();
-		while (!A.ColaVacia()) {
-			aux.Acolar(A.Primero());
-			A.Desacolar();
-		}
-	}*/
-
-	// 4d)
-	public boolean colaCapicua(ColaTDA A) {
-		ColaTDA aux = new Cola();
-		aux.InicializarCola();
-		invertirColaAux(A,aux);
-		while (!A.ColaVacia() && !aux.ColaVacia()) {
-			for (int i = 0; i<=cantCola; i++) {
-				if (A.Primero() == aux.Primero()) {
-					A.Desacolar();
-					aux.Desacolar();
-				}
-			}
+	// 4d) Determinar si el final de la Cola C1 coincide o no con la Cola C2.
+	public boolean colaCoincidencia(ColaTDA origen, ColaTDA origen2) {
+		PilaTDA auxOrigen = new Pila();
+		auxOrigen.InicializarPila();
+		PilaTDA auxOrigen2 = new Pila();
+		auxOrigen2.InicializarPila();
+		pasarColaPila(origen, auxOrigen);
+		pasarColaPila(origen2,auxOrigen2);
+		if (auxOrigen.Tope() == auxOrigen2.Tope())
 			return true;
+		else 
+			return false;
+	}
+	
+
+	// 4e) Determinar si una Cola es capicúa o no. Para ser capicúa debe cumplir
+	//	   que el primer elemento es igual al último, 
+	//	   el segundo igual al penúltimo, etc.
+
+	public void colaCapicua(ColaTDA origen) {
+		PilaTDA aux = new Pila();
+		aux.InicializarPila();
+		PilaTDA aux2 = new Pila();
+		aux2.InicializarPila();
+		pasarColaPila(origen,aux);
+		pasarColaPila(origen,aux2);
+		pasarPilaCola(aux2,origen);
+		System.out.println(origen.Primero());
+		System.out.println(aux.Tope());
+		while(!origen.ColaVacia() && !aux.PilaVacia()) {
+			if (origen.Primero() == aux.Tope()) {
+				origen.Desacolar();
+				aux.Desapilar();
+			}
+			System.out.println(origen.Primero());
+			System.out.println(aux.Tope());
 		}
-		return false;
 	}
 	
 	// <------FIN METODOS DE COLA----->//
