@@ -46,6 +46,7 @@ public class ColaPrioridad implements ColaPrioridadTDA {
             else
                 noCambio=true;
         }
+        ult++;
     }
 	
 }
