@@ -3,14 +3,14 @@ package Implementaciones.Dinamico;
 import Api.ABBTDA;
 
 public class ABB implements ABBTDA {
-	
-	class nodo{
+
+	class nodo {
 		int dato;
-		ABBTDA izq,der;
+		ABBTDA izq, der;
 	}
 
 	nodo primer;
-	
+
 	@Override
 	public void inicializarArbol() {
 		primer = null;
@@ -41,21 +41,26 @@ public class ABB implements ABBTDA {
 			nuevo.der = new ABB();
 			nuevo.der.inicializarArbol();
 			primer = nuevo;
-		}
-		else if (primer.dato > x) 
+		} else if (primer.dato > x)
 			hijoIzq().agregar(x);
 		else
 			hijoDer().agregar(x);
 	}
-	
+
 	@Override
 	public void eliminar(int x) {
-
+		if (!arbolVacio()) {
+			if (primer.dato > x) {
+				hijoIzq().eliminar(x);
+			} 
+			else if (primer.dato < x) {
+				hijoDer().eliminar(x);
+			}
+		}
 	}
 
 	@Override
 	public boolean arbolVacio() {
-		// TODO Auto-generated method stub
-		return false;
+		return primer == null;
 	}
 }

@@ -28,11 +28,13 @@ public class Conjunto implements ConjuntoTDA {
 			anterior = actual;
 			actual = actual.sig;
 		}
-		if(actual == null){
-			inicio = inicio.sig;
-		}
-		else{
-			anterior.sig = actual.sig;
+		if (actual != null) {
+			if(anterior == null){
+				inicio = inicio.sig;
+			}
+			else{
+				anterior.sig = actual.sig;
+			}
 		}
 	}
 
