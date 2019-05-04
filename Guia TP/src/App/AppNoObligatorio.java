@@ -60,9 +60,18 @@ public class AppNoObligatorio {
 
 		// ---INICIO EJERCICIO PILA---
 
-		// ejercicioTP3_1a();
+		// ejercicioTP3_1a(); //CORREGIDO
+		// ejercicioTP3_1b(); //CORREGIDO
+		// ejercicioTP3_1c(); //CORREGIDO
+		// ejercicioTP3_1d();
 
 		// ---FIN EJERCICIO PILA---
+		
+		// ---INICIO EJERCICIO COLA---
+
+		ejercicioTP3_2a();
+		
+		// ---FIN EJERCICIO COLA---
 
 		// TRABAJO PRACTICO 4
 
@@ -451,6 +460,11 @@ public class AppNoObligatorio {
 	 * TRABAJO PRACTICO NRO 3
 	 */
 
+	// <---INICIO EJERCICIOS TDA PILA--->
+	/*
+	 * Comprobar si una Pila P es capicúa (el elemento del tope es igual al de la base,
+	 * el segundo igual al anteúltimo, etc.)
+	 */
 	public static void ejercicioTP3_1a() {
 		PilaTDA pila = new Pila();
 		pila.InicializarPila();
@@ -468,7 +482,114 @@ public class AppNoObligatorio {
 		else
 			System.out.println("Pila NO Capicua");
 	}
+	
 
+	/*
+	 * Eliminar de una Pila P las repeticiones de elementos, dejando un representante
+	 * de cada uno de los elementos presentes originalmente. Se deberá respetar el
+	 * orden original de los elementos, y en el caso de los repetidos se conservará el
+	 * primero que haya ingresado en P.
+	 */
+	public static void ejercicioTP3_1b() {
+		PilaTDA pila = new Pila();
+		pila.InicializarPila();
+		pila.Apilar(2);
+		pila.Apilar(3);
+		pila.Apilar(1);
+		pila.Apilar(5);
+		pila.Apilar(6);
+		pila.Apilar(1);
+		pila.Apilar(5);
+		pila.Apilar(6);
+		Metodos m = new Metodos();
+		m.pilaSinRepeticiones(pila);
+		while(!pila.PilaVacia()) {
+			System.out.println(pila.Tope());
+			pila.Desapilar();
+		}
+	}
+	
+	/*
+	 * Repartir una Pila P en dos mitades M1 y M2 de elementos consecutivos,
+	 * respetando el orden. Asumir que la Pila P contiene un número par de elementos.
+	 */
+	public static void ejercicioTP3_1c(){
+		PilaTDA pila = new Pila();
+		pila.InicializarPila();
+		PilaTDA M1 = new Pila();
+		M1.InicializarPila();
+		PilaTDA M2 = new Pila();
+		M2.InicializarPila();
+		pila.Apilar(2);
+		pila.Apilar(3);
+		pila.Apilar(1);
+		pila.Apilar(5);
+		pila.Apilar(51);
+		Metodos m = new Metodos();
+		m.repartirPila(pila,M1,M2);
+		while(!M2.PilaVacia()) {
+			System.out.println(M2.Tope());
+			M2.Desapilar();
+		}
+	}
+	
+	
+	/*
+	 * Generar el conjunto de elementos que se repiten en una Pila.
+	 */
+	public static void ejercicioTP3_1d() {
+		ConjuntoTDA resultado = new Conjunto();
+		resultado.InicializarConjunto();
+		PilaTDA pila = new Pila();
+		pila.InicializarPila();
+		pila.Apilar(2);
+		pila.Apilar(5);
+		pila.Apilar(10);
+		pila.Apilar(3);
+		pila.Apilar(2);
+		pila.Apilar(100);
+		pila.Apilar(5);
+		Metodos m = new Metodos();
+		m.conjuntoDeRepeticiones_pila(pila,resultado);
+		System.out.println("Conjunto resultante");
+		while(!resultado.ConjuntoVacio()) {
+			int valor = resultado.Elegir();
+			System.out.println(valor);
+			resultado.Sacar(valor);
+		}
+	}
+	
+	// <---FIN EJERCICIOS TDA PILA--->
+	
+	// <---INICIO EJERCICIOS TDA COLA--->
+	
+	
+	/*
+	 * Eliminar de una Cola C las repeticiones de elementos, dejando un representante
+	 * de cada uno de los elementos presentes originalmente. Se deberá respetar el
+	 * orden original de los elementos, y en el caso de los repetidos se conservará el
+	 * primero que haya ingresado en C.
+	 */
+	public static void ejercicioTP3_2a() {
+		ColaTDA cola = new Cola();
+		cola.InicializarCola();
+		cola.Acolar(3);
+		cola.Acolar(10);
+		cola.Acolar(5);
+		cola.Acolar(20);
+		cola.Acolar(1);
+		cola.Acolar(2);
+		cola.Acolar(5);
+		Metodos m = new Metodos();
+		m.colaSinRepeticiones(cola);
+		while(!cola.ColaVacia()) {
+			System.out.println(cola.Primero());
+			cola.Desacolar();
+		}
+	}
+	
+	// <---FIN EJERCICIOS TDA COLA--->
+	
 	/**
 	 * TRABAJO PRACTICO NRO 4
 	 */

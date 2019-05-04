@@ -300,13 +300,12 @@ public class Metodos {
 
 	// <------INICIO METODOS PILA------>
 
+	// 1a
 	public boolean pilaCapicua(PilaTDA pila) {
 		Pila aux = new Pila();
 		aux.InicializarPila();
 		int cant = 0;
 		int mitad = 0;
-		ColaTDA C = new Cola();
-		C.InicializarCola();
 
 		while (!pila.PilaVacia()) {
 			aux.Apilar(pila.Tope());
@@ -318,23 +317,156 @@ public class Metodos {
 		mitad = cant / 2;
 
 		while (!aux.PilaVacia() && mitad > 0) {
-			C.Acolar(aux.Tope());
+			pila.Apilar(aux.Tope());
 			aux.Desapilar();
 			mitad--;
 		}
 
-		while (!C.ColaVacia() && !aux.PilaVacia()) {
-			if (C.Primero() != aux.Tope()) {
+		while (!pila.PilaVacia() && !aux.PilaVacia()) {
+			if (pila.Tope() != aux.Tope()) {
 				return false;
 			}
-			C.Desacolar();
+			pila.Desapilar();
 			aux.Desapilar();
 		}
-		return (C.ColaVacia() && aux.PilaVacia());
+		return (pila.PilaVacia() && aux.PilaVacia());
+	}
+
+	// 1b
+	public void pilaSinRepeticiones(PilaTDA P) {
+		PilaTDA aux = new Pila();
+		aux.InicializarPila();
+		PilaTDA fin = new Pila();
+		fin.InicializarPila();
+		int comparador = 0;
+		while (!P.PilaVacia()) {
+			while (!P.PilaVacia()) {
+				aux.Apilar(P.Tope());
+				P.Desapilar();
+			}
+			comparador = aux.Tope();
+			aux.Desapilar();
+			while (!aux.PilaVacia()) {
+				/*
+				 * en este ciclo comparo el tope de la pila (guardado en la variable
+				 * "comparador") con los demas valores de la pila. Si estos difieren lo vuelvo a
+				 * apilar en la pila original (P) Si no hay diferencia, desapilo el valor dado
+				 * que se tiene que respetar el orden de los elementos repetidos
+				 */
+				if (comparador != aux.Tope())
+					P.Apilar(aux.Tope());
+				aux.Desapilar();
+			}
+			fin.Apilar(comparador);
+		}
+		// volvemos a ingresar los datos sin los valores repetidos en la pila original
+		while (!fin.PilaVacia()) {
+			P.Apilar(fin.Tope());
+			fin.Desapilar();
+		}
+	}
+
+	// 1c
+	public void repartirPila(PilaTDA P, PilaTDA M1, PilaTDA M2) {
+		PilaTDA aux = new Pila();
+		aux.InicializarPila();
+		PilaTDA aux2 = new Pila();
+		aux2.InicializarPila();
+		int cant = 0;
+		while (!P.PilaVacia()) {
+			aux.Apilar(P.Tope());
+			P.Desapilar();
+			cant++;
+		}
+		while (!aux.PilaVacia()) {
+			M1.Apilar(aux.Tope());
+			aux.Desapilar();
+		}
+		cant = cant / 2;
+		while (!M1.PilaVacia()) {
+			M2.Apilar(M1.Tope());
+			cant--;
+			M1.Desapilar();
+		}
+		invertirPilaEJERCICIO_1C(M2);
+	}
+
+	private void invertirPilaEJERCICIO_1C(PilaTDA A) {
+		PilaTDA aux1 = new Pila();
+		aux1.InicializarPila();
+		while (!A.PilaVacia()) {
+			aux1.Apilar(A.Tope());
+			A.Desapilar();
+		}
+		PilaTDA aux2 = new Pila();
+		aux2.InicializarPila();
+		while (!aux1.PilaVacia()) {
+			aux2.Apilar(aux1.Tope());
+			aux1.Desapilar();
+		}
+		while (!aux2.PilaVacia()) {
+			A.Apilar(aux2.Tope());
+			aux2.Desapilar();
+		}
+	}
+	
+	// 1d
+	
+	public void conjuntoDeRepeticiones_pila(PilaTDA pila, ConjuntoTDA resultado) {
+		PilaTDA aux = new Pila();
+		aux.InicializarPila();
+		int valorUnitario = 0;
+		while (!pila.PilaVacia()) {
+			valorUnitario = pila.Tope();
+			pila.Desapilar();
+			while(!pila.PilaVacia()) {
+				if (valorUnitario == pila.Tope()) {
+					if (!resultado.Pertenece(valorUnitario))
+						resultado.Agregar(valorUnitario);
+					else
+						aux.Apilar(pila.Tope());
+				}
+				pila.Desapilar();
+			}
+			while(!aux.PilaVacia()) {
+				pila.Apilar(aux.Tope());
+				aux.Desapilar();
+			}
+		}
 	}
 
 	// <------FIN METODOS PILA------>
+	
+	// <------INICIO METODOS COLA------>
+	
+	public void colaSinRepeticiones(ColaTDA C) {
+		ColaTDA aux = new Cola();
+		ColaTDA fin = new Cola();
+		aux.InicializarCola();
+		fin.InicializarCola();
+		int comparador;
+		while(!C.ColaVacia()) {
+			comparador = C.Primero();
+			C.Desacolar();
+			while(!C.ColaVacia()) {
+				if(comparador != C.Primero())
+					aux.Acolar(comparador);
+				C.Desacolar();
+			}
+			fin.Acolar(comparador);
+			while(!aux.ColaVacia()) {
+				C.Acolar(aux.Primero());
+				aux.Desacolar();
+			}
+		}
+		while(!fin.ColaVacia()) {
+			C.Acolar(fin.Primero());
+			fin.Desacolar();
+		}
+	}
 
+	// <------FIN METODOS COLA------>
+	
 	/**
 	 * TRABAJO PRACTICO NRO 4
 	 */
