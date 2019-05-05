@@ -5,6 +5,7 @@ import Api.ColaPrioridadTDA;
 import Api.ColaTDA;
 import Api.ConjuntoTDA;
 import Api.PilaTDA;
+import Implementaciones.Dinamico.Conjunto;
 import Implementaciones.Estatico.Cola;
 import Implementaciones.Estatico.Pila;
 
@@ -368,27 +369,19 @@ public class Metodos {
 
 	// 1c
 	public void repartirPila(PilaTDA P, PilaTDA M1, PilaTDA M2) {
-		PilaTDA aux = new Pila();
-		aux.InicializarPila();
-		PilaTDA aux2 = new Pila();
-		aux2.InicializarPila();
 		int cant = 0;
 		while (!P.PilaVacia()) {
-			aux.Apilar(P.Tope());
+			M1.Apilar(P.Tope());
 			P.Desapilar();
 			cant++;
 		}
-		while (!aux.PilaVacia()) {
-			M1.Apilar(aux.Tope());
-			aux.Desapilar();
-		}
 		cant = cant / 2;
-		while (!M1.PilaVacia()) {
-			M2.Apilar(M1.Tope());
+		while (cant != 0) {
 			cant--;
+			M2.Apilar(M1.Tope());
 			M1.Desapilar();
 		}
-		invertirPilaEJERCICIO_1C(M2);
+		invertirPilaEJERCICIO_1C(M1);
 	}
 
 	private void invertirPilaEJERCICIO_1C(PilaTDA A) {
@@ -409,9 +402,9 @@ public class Metodos {
 			aux2.Desapilar();
 		}
 	}
-	
+
 	// 1d
-	
+
 	public void conjuntoDeRepeticiones_pila(PilaTDA pila, ConjuntoTDA resultado) {
 		PilaTDA aux = new Pila();
 		aux.InicializarPila();
@@ -419,7 +412,7 @@ public class Metodos {
 		while (!pila.PilaVacia()) {
 			valorUnitario = pila.Tope();
 			pila.Desapilar();
-			while(!pila.PilaVacia()) {
+			while (!pila.PilaVacia()) {
 				if (valorUnitario == pila.Tope()) {
 					if (!resultado.Pertenece(valorUnitario))
 						resultado.Agregar(valorUnitario);
@@ -428,7 +421,7 @@ public class Metodos {
 				}
 				pila.Desapilar();
 			}
-			while(!aux.PilaVacia()) {
+			while (!aux.PilaVacia()) {
 				pila.Apilar(aux.Tope());
 				aux.Desapilar();
 			}
@@ -436,37 +429,134 @@ public class Metodos {
 	}
 
 	// <------FIN METODOS PILA------>
-	
+
 	// <------INICIO METODOS COLA------>
-	
+
+	// 2a
 	public void colaSinRepeticiones(ColaTDA C) {
 		ColaTDA aux = new Cola();
 		ColaTDA fin = new Cola();
 		aux.InicializarCola();
 		fin.InicializarCola();
 		int comparador;
-		while(!C.ColaVacia()) {
+		while (!C.ColaVacia()) {
 			comparador = C.Primero();
 			C.Desacolar();
-			while(!C.ColaVacia()) {
-				if(comparador != C.Primero())
+			while (!C.ColaVacia()) {
+				if (comparador != C.Primero())
 					aux.Acolar(comparador);
 				C.Desacolar();
 			}
 			fin.Acolar(comparador);
-			while(!aux.ColaVacia()) {
+			while (!aux.ColaVacia()) {
 				C.Acolar(aux.Primero());
 				aux.Desacolar();
 			}
 		}
-		while(!fin.ColaVacia()) {
+		while (!fin.ColaVacia()) {
 			C.Acolar(fin.Primero());
 			fin.Desacolar();
 		}
 	}
 
+	// 2b
+	public void repartirCola(ColaTDA C, ColaTDA M1, ColaTDA M2) {
+		int cant = 0;
+		while (!C.ColaVacia()) {
+			M2.Acolar(C.Primero());
+			cant++;
+			C.Desacolar();
+		}
+		cant = cant / 2;
+		while (cant != 0) {
+			M1.Acolar(M2.Primero());
+			M2.Desacolar();
+			cant--;
+		}
+	}
+
+	public void conjuntoRepeticiones_cola(ColaTDA cola, ConjuntoTDA resultado) {
+		ColaTDA aux = new Cola();
+		aux.InicializarCola();
+		int valor;
+		while (!cola.ColaVacia()) {
+			valor = cola.Primero();
+			cola.Desacolar();
+			while (!cola.ColaVacia()) {
+				if (valor == cola.Primero())
+					resultado.Agregar(valor);
+				else
+					aux.Acolar(cola.Primero());
+				cola.Desacolar();
+			}
+		}
+		while (!aux.ColaVacia()) {
+			cola.Acolar(aux.Primero());
+			aux.Desacolar();
+		}
+	}
+
 	// <------FIN METODOS COLA------>
-	
+
+	// <------INICIO METODOS CONJUNTOS------>
+
+	// 3d
+	public boolean conjuntosIguales(ConjuntoTDA C1, ConjuntoTDA C2) {
+		int aux;
+		while (!C2.ConjuntoVacio()) {
+			aux = C2.Elegir();
+			C2.Sacar(aux);
+			if (C1.Pertenece(aux)) {
+				C1.Sacar(aux);
+			} else
+				return false;
+		}
+		return true;
+	}
+
+	// 3e
+	public int cardinalidadConjunto(ConjuntoTDA C, int cardinalidad) {
+		while (!C.ConjuntoVacio()) {
+			int valor = C.Elegir();
+			cardinalidad++;
+			C.Sacar(valor);
+		}
+		return cardinalidad;
+	}
+
+	// 3f
+	public void conjuntoGenerado_PilaCola(ConjuntoTDA resultado, PilaTDA P, ColaTDA C) {
+		while (!P.PilaVacia()) {
+			resultado.Agregar(P.Tope());
+			P.Desapilar();
+		}
+		while (!C.ColaVacia()) {
+			resultado.Agregar(C.Primero());
+			C.Desacolar();
+		}
+	}
+
+	// 3g
+	public boolean elementosIguales_PilaCola(PilaTDA P, ColaTDA C) {
+		ConjuntoTDA pilaConjunto = new Conjunto();
+		ConjuntoTDA colaConjunto = new Conjunto();
+		colaConjunto.InicializarConjunto();
+		pilaConjunto.InicializarConjunto();
+		while (!P.PilaVacia()) {
+			pilaConjunto.Agregar(P.Tope());
+			P.Desapilar();
+		}
+
+		while (!C.ColaVacia()) {
+			colaConjunto.Agregar(C.Primero());
+			C.Desacolar();
+		}
+		
+		return conjuntosIguales(pilaConjunto, colaConjunto);
+	}
+
+	// <------FIN METODOS CONJUNTOS------>
+
 	/**
 	 * TRABAJO PRACTICO NRO 4
 	 */
