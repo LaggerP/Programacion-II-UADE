@@ -4,6 +4,7 @@ import Api.ABBTDA;
 import Api.ColaPrioridadTDA;
 import Api.ColaTDA;
 import Api.ConjuntoTDA;
+import Api.DiccionarioMultipleTDA;
 import Api.PilaTDA;
 import Implementaciones.Dinamico.Conjunto;
 import Implementaciones.Estatico.Cola;
@@ -444,9 +445,10 @@ public class Metodos {
 			C.Desacolar();
 			while (!C.ColaVacia()) {
 				if (comparador != C.Primero())
-					aux.Acolar(comparador);
+					aux.Acolar(C.Primero());
 				C.Desacolar();
 			}
+
 			fin.Acolar(comparador);
 			while (!aux.ColaVacia()) {
 				C.Acolar(aux.Primero());
@@ -457,6 +459,7 @@ public class Metodos {
 			C.Acolar(fin.Primero());
 			fin.Desacolar();
 		}
+
 	}
 
 	// 2b
@@ -475,6 +478,7 @@ public class Metodos {
 		}
 	}
 
+	// 2c
 	public void conjuntoRepeticiones_cola(ColaTDA cola, ConjuntoTDA resultado) {
 		ColaTDA aux = new Cola();
 		aux.InicializarCola();
@@ -499,6 +503,8 @@ public class Metodos {
 	// <------FIN METODOS COLA------>
 
 	// <------INICIO METODOS CONJUNTOS------>
+
+	// <------FIN METODOS CONJUNTOS------>
 
 	// 3d
 	public boolean conjuntosIguales(ConjuntoTDA C1, ConjuntoTDA C2) {
@@ -551,11 +557,130 @@ public class Metodos {
 			colaConjunto.Agregar(C.Primero());
 			C.Desacolar();
 		}
-		
+
 		return conjuntosIguales(pilaConjunto, colaConjunto);
 	}
 
-	// <------FIN METODOS CONJUNTOS------>
+	// <------INICIO METODOS COLA PRIORIDAD------>
+
+	public void generarRecuperarColaPrioridad(ColaPrioridadTDA C, DiccionarioMultipleTDA DM) {
+		while (!C.colaVacia()) {
+			DM.agregar(C.prioridad(), C.primero());
+			C.desacolar();
+		}
+	}
+
+	// <------FIN METODOS COLA PRIORIDAD------>
+
+	// <------INICIO METODOS DICCIONARIOS MULTIPLES------>
+
+	public void mostrarDiccionarioMultiple(DiccionarioMultipleTDA DM) {
+		ConjuntoTDA claves = new Conjunto();
+		claves.InicializarConjunto();
+		ConjuntoTDA valores = new Conjunto();
+		valores.InicializarConjunto();
+
+		claves = DM.claves();
+		while (!claves.ConjuntoVacio()) {
+			int claveUnitaria = claves.Elegir();
+			claves.Sacar(claveUnitaria);
+			valores = DM.recuperar(claveUnitaria);
+			System.out.println("Clave: " + claveUnitaria);
+			while (!valores.ConjuntoVacio()) {
+				int valorUnitario = valores.Elegir();
+				System.out.print(valorUnitario + ",");
+				valores.Sacar(valorUnitario);
+			}
+			System.out.println();
+		}
+	}
+
+	// 5a
+	public void generarDiccionarioMultiple(DiccionarioMultipleTDA D1, DiccionarioMultipleTDA D2,
+			DiccionarioMultipleTDA Dgenerado) {
+		int claveUnitaria, valorUnitario;
+		ConjuntoTDA claves = new Conjunto();
+		claves.InicializarConjunto();
+		ConjuntoTDA valores = new Conjunto();
+		valores.InicializarConjunto();
+
+		claves = D1.claves();
+		while (!claves.ConjuntoVacio()) {
+			claveUnitaria = claves.Elegir();
+			claves.Sacar(claveUnitaria);
+			valores = D1.recuperar(claveUnitaria); // obtenemos un conjunto de valores asociados a la clave del D1
+			while (!valores.ConjuntoVacio()) {
+				valorUnitario = valores.Elegir();
+				Dgenerado.agregar(claveUnitaria, valorUnitario);
+				valores.Sacar(valorUnitario);
+			}
+		}
+
+		claves = D2.claves();
+		while (!claves.ConjuntoVacio()) {
+			claveUnitaria = claves.Elegir();
+			claves.Sacar(claveUnitaria);
+			valores = D2.recuperar(claveUnitaria); // obtenemos un conjunto de valores asociados a la clave del D2
+			while (!valores.ConjuntoVacio()) {
+				valorUnitario = valores.Elegir();
+				Dgenerado.agregar(claveUnitaria, valorUnitario);
+				valores.Sacar(valorUnitario);
+			}
+		}
+	}
+
+	// 5b
+	public void generarDiccionarioCoincidente(DiccionarioMultipleTDA D1, DiccionarioMultipleTDA D2,
+			DiccionarioMultipleTDA DMpuntoB) {
+		ConjuntoTDA claves1 = D1.claves();
+		ConjuntoTDA claves2 = D2.claves();
+		int clave;
+		while (!claves1.ConjuntoVacio()) {
+			clave = claves1.Elegir();
+			claves1.Sacar(clave);
+			if (claves2.Pertenece(clave)) {
+				int valor;
+				ConjuntoTDA valores1 = D1.recuperar(clave);
+				ConjuntoTDA valores2 = D2.recuperar(clave);
+				while (!valores1.ConjuntoVacio()) {
+					valor = valores1.Elegir();
+					valores1.Sacar(valor);
+					if (valores2.Pertenece(valor)) {
+						DMpuntoB.agregar(clave, valor);
+					}
+				}
+			}
+		}
+	}
+
+	// 5c
+	public void generarDiccionarioElementos_A_Clave(DiccionarioMultipleTDA D1, DiccionarioMultipleTDA D2,
+			DiccionarioMultipleTDA DMpuntoC) {
+		ConjuntoTDA claves1 = D1.claves();
+		ConjuntoTDA claves2 = D2.claves();
+		int clave, valor;
+		while (!claves1.ConjuntoVacio()) {
+			clave = claves1.Elegir();
+			claves1.Sacar(clave);
+			if (claves2.Pertenece(clave)) {
+				ConjuntoTDA valores1 = D1.recuperar(clave);
+				ConjuntoTDA valores2 = D2.recuperar(clave);
+				while (!valores1.ConjuntoVacio()) {
+					valor = valores1.Elegir();
+					valores1.Sacar(valor);
+					DMpuntoC.agregar(clave, valor);
+				}
+				while (!valores2.ConjuntoVacio()) {
+					valor = valores2.Elegir();
+					valores2.Sacar(valor);
+					DMpuntoC.agregar(clave, valor);
+				}
+
+			}
+		}
+	}
+
+	// <------FIN METODOS DICCIONARIOS MULTIPLES------>
 
 	/**
 	 * TRABAJO PRACTICO NRO 4
@@ -577,6 +702,122 @@ public class Metodos {
 		}
 	}
 
+	// 3b
+	public boolean determinarHoja(ABBTDA arbol, int valorBuscado) {
+		if (arbol.arbolVacio()) {
+			return false; // no existen datos en el arbol
+		} else {
+			if (arbol.raiz() == valorBuscado) {
+				if (arbol.hijoIzq().arbolVacio() && arbol.hijoDer().arbolVacio())
+					return true; // si el valor no posee valores hijos (no es raiz) retorna verdadero
+				else
+					return false;
+			} else {
+				if (valorBuscado > arbol.raiz())
+					return determinarHoja(arbol.hijoDer(), valorBuscado);
+				else
+					return determinarHoja(arbol.hijoIzq(), valorBuscado);
+			}
+		}
+	}
+
+	// 3c
+	public int profundidadValor(ABBTDA arbol, int valorBuscado) {
+		if (arbol.raiz() == valorBuscado)
+			return 0;
+		else {
+			if (valorBuscado > arbol.raiz())
+				return 1 + profundidadValor(arbol.hijoDer(), valorBuscado);
+			else
+				return 1 + profundidadValor(arbol.hijoIzq(), valorBuscado);
+		}
+	}
+
+	// 3d
+	public int menorValor(ABBTDA arbol) {
+		if (arbol.arbolVacio())
+			return 0;
+		else {
+			if (!arbol.hijoIzq().arbolVacio()) // si el arbol sigue teniendo valores
+				return menorValor(arbol.hijoIzq());
+			else
+				return arbol.raiz();
+		}
+	}
+
+	// 3e
+	public int cantidadElementos(ABBTDA arbol) {
+		if (arbol.arbolVacio())
+			return 0;
+		else
+			return 1 + cantidadElementos(arbol.hijoDer()) + cantidadElementos(arbol.hijoIzq());
+	}
+
+	// 3f
+	public int sumatoriaElementos(ABBTDA arbol) {
+		if (arbol.arbolVacio())
+			return 0;
+		else {
+			return arbol.raiz() + sumatoriaElementos(arbol.hijoDer()) + sumatoriaElementos(arbol.hijoIzq());
+		}
+	}
+
+	// 3g
+	public int sumatoriaCantHojas(ABBTDA arbol) {
+		if (arbol.arbolVacio())
+			return 0;
+		else {
+			if (arbol.hijoDer().arbolVacio() && arbol.hijoIzq().arbolVacio())
+				return 1;
+			else
+				return sumatoriaCantHojas(arbol.hijoDer()) + sumatoriaCantHojas(arbol.hijoIzq());
+		}
+	}
+
+	// 3h
+	public int alturaArbol(ABBTDA arbol) {
+		if (arbol.arbolVacio())
+			return 0;
+		else {
+			if (alturaArbol(arbol.hijoDer()) > alturaArbol(arbol.hijoIzq()))
+				return 1 + alturaArbol(arbol.hijoDer());
+			else
+				return 1 + alturaArbol(arbol.hijoIzq());
+		}
+	}
+
+	// 3i
+	public boolean igualForma(ABBTDA arbol, ABBTDA arbol2) {
+		ColaTDA colaArbol = new Cola();
+		ColaTDA colaArbol2 = new Cola();
+		colaArbol.InicializarCola();
+		colaArbol2.InicializarCola();
+		cargarArbol(arbol, colaArbol);
+		cargarArbol(arbol2, colaArbol2);
+		while (!colaArbol.ColaVacia()) {
+			if (colaArbol.Primero() != colaArbol2.Primero())
+				return false;
+			colaArbol.Desacolar();
+			if (!colaArbol.ColaVacia())
+				colaArbol2.Desacolar();
+		}
+		return true;
+	}
+
+	private void cargarArbol(ABBTDA arbol, ColaTDA cola) {
+		if (!arbol.arbolVacio()) {
+			cargarArbol(arbol.hijoDer(), cola);
+			cola.Acolar(0);
+			cargarArbol(arbol.hijoIzq(), cola);
+			cola.Acolar(1);
+		}
+	}
+
+	public boolean arbolesIguales (ABBTDA arbol, ABBTDA arbol2) {
+		return false;
+		
+	}
+	
 	// 3l i
 	public void mostrarOrden(ABBTDA a) {
 		// mostramos hijo izquiedo despues la raiz y despues el hijo derecho

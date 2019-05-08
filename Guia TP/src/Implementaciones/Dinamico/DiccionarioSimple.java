@@ -4,18 +4,19 @@ import Api.ConjuntoTDA;
 import Api.DiccionarioSimpleTDA;
 
 public class DiccionarioSimple implements DiccionarioSimpleTDA {
-	
-	class NodoCl{
+
+	class NodoCl {
 		int clave, valor;
 		NodoCl sigCl;
 	}
+
 	NodoCl iniCl;
 
 	@Override
 	public void InicializarDiccionario() {
 		iniCl = null;
 	}
-	
+
 	@Override
 	public void Agregar(int clave, int valor) {
 		NodoCl nuevo;
@@ -23,10 +24,10 @@ public class DiccionarioSimple implements DiccionarioSimpleTDA {
 		nuevo.clave = clave;
 		nuevo.valor = valor;
 		NodoCl aux = iniCl;
-		while(aux!= null && aux.clave!=clave){
+		while (aux != null && aux.clave != clave) {
 			aux = aux.sigCl;
 		}
-		if(aux==null){
+		if (aux == null) {
 			nuevo.sigCl = iniCl;
 			iniCl = nuevo;
 		}
@@ -34,16 +35,15 @@ public class DiccionarioSimple implements DiccionarioSimpleTDA {
 
 	@Override
 	public void Eliminar(int clave) {
-		if(iniCl != null){
-			if(iniCl.clave == clave){
+		if (iniCl != null) {
+			if (iniCl.clave == clave) {
 				iniCl = iniCl.sigCl;
-			}
-			else{
+			} else {
 				NodoCl aux = iniCl;
-				while (aux.sigCl != null && aux.sigCl.clave != clave){
+				while (aux.sigCl != null && aux.sigCl.clave != clave) {
 					aux = aux.sigCl;
 				}
-				if(aux.sigCl != null) {
+				if (aux.sigCl != null) {
 					aux.sigCl = aux.sigCl.sigCl;
 				}
 			}
@@ -53,7 +53,7 @@ public class DiccionarioSimple implements DiccionarioSimpleTDA {
 	@Override
 	public float Recuperar(int clave) {
 		NodoCl claveBuscada = iniCl;
-		while (claveBuscada != null && claveBuscada.clave != clave){
+		while (claveBuscada != null && claveBuscada.clave != clave) {
 			claveBuscada = claveBuscada.sigCl;
 		}
 		return claveBuscada.valor;
@@ -64,7 +64,7 @@ public class DiccionarioSimple implements DiccionarioSimpleTDA {
 		ConjuntoTDA claves = new Conjunto();
 		claves.InicializarConjunto();
 		NodoCl actual = iniCl;
-		while(actual != null){
+		while (actual != null) {
 			claves.Agregar(iniCl.clave);
 			actual = actual.sigCl;
 		}

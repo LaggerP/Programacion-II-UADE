@@ -15,7 +15,7 @@ public class Cola implements ColaTDA {
 	public void Acolar(int x) {
 		nodo nuevo = new nodo();
 		nuevo.valor = x;
-		if (inicio == null) { //lista vacia o primer nod
+		if (inicio == null) { //lista vacia o primer nodo
 			nuevo.sig = inicio;
 			inicio = nuevo;
 		}else {
